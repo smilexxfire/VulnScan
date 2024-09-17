@@ -11,21 +11,21 @@
 import json
 import os
 import subprocess
-import sys
-sys.path.append("D:\\pythonProject\\VulnScan")
 
 from common.module import Module
+from common.task import Task
 from config.settings import MONGO_COLLECTION
 from config.log import logger
 
-class Nuclei(Module):
-    def __init__(self, url, severity):
-        self.modules = "vulnscan"
+class Nuclei(Module, Task):
+    def __init__(self, url, severity, task_id):
+        self.module = "vulnscan"
         self.source ="nuclei"
         self.collection = MONGO_COLLECTION
         self.target = url
         self.severity = severity
         Module.__init__(self)
+        Task.__init__(self, task_id)
 
     def do_scan(self):
         cmd = [self.execute_path, "-u", self.target, "-s", self.severity, "-j", "-o", self.result_file]
@@ -50,15 +50,17 @@ class Nuclei(Module):
 
     def run(self):
         self.begin()
+        self.receive_task()
         self.do_scan()
         self.deal_data()
         self.save_db()
         self.delete_temp()
         self.finish()
+        self.finnish_task(self.elapse, len(self.results))
 
-def run(url, severity):
-    nuclei = Nuclei(url, severity)
+def run(url, severity, task_id):
+    nuclei = Nuclei(url, severity, task_id)
     nuclei.run()
 
 if __name__ == '__main__':
-    run("http://43.142.109.233:8848/", "critical")
+    run("http://43.142.109.233:8848/", "critical", "43432,434324,3242")

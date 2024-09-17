@@ -1,1 +1,1 @@
-smilexxfire/vulnscan:1.0
+smilexxfire/vulnscan:1.1

@@ -9,6 +9,7 @@
 @Comment ： 
 '''
 import json
+import uuid
 
 from common.database.producer import RabbitMQProducer
 from config.settings import RABBITMQ_QUEUE_NAME
@@ -30,6 +31,7 @@ def send_task(task):
 if __name__ == '__main__':
     task = {
         "url": "http://43.142.109.233:8848/",
-        "severity": "critical"
+        "severity": "critical",
+        "task_id": str(uuid.uuid4()),
     }
     send_task(task)

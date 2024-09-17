@@ -19,7 +19,10 @@ class VulnScanWorker(RabbitMQConsumer):
 
     def task_handle(self):
         task = json.loads(self.message)
-        nuclei.run(task["url"], task["severity"])
+        url = task['url']
+        severity = task['severity']
+        task_id = task['task_id']
+        nuclei.run(url, severity, task_id)
 
 if __name__ == '__main__':
     # 监听任务队列
